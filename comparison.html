@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Performance Comparison - Satellite Telemetry Analysis{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-md-12">
+        <h2>Model Performance Comparison</h2>
+        <p class="lead">Side-by-side Evaluation</p>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Classification Models Comparison</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Model</th>
+                                <th>Accuracy</th>
+                                <th>Precision</th>
+                                <th>Recall</th>
+                                <th>F1-Score</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for name in classifier_names %}
+                            <tr>
+                                <td><strong>{{ name }}</strong></td>
+                                <td>{{ "%.4f"|format(clf_results[name].accuracy) }}</td>
+                                <td>{{ "%.4f"|format(clf_results[name].precision) }}</td>
+                                <td>{{ "%.4f"|format(clf_results[name].recall) }}</td>
+                                <td>{{ "%.4f"|format(clf_results[name].f1) }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Regression Models Comparison</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Model</th>
+                                <th>MAE</th>
+                                <th>MSE</th>
+                                <th>RMSE</th>
+                                <th>R² Score</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for name in regressor_names %}
+                            <tr>
+                                <td><strong>{{ name }}</strong></td>
+                                <td>{{ "%.4f"|format(reg_results[name].mae) }}</td>
+                                <td>{{ "%.4f"|format(reg_results[name].mse) }}</td>
+                                <td>{{ "%.4f"|format(reg_results[name].rmse) }}</td>
+                                <td>{{ "%.4f"|format(reg_results[name].r2) }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

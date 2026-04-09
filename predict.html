@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+
+{% block title %}Prediction - Satellite Telemetry Analysis{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-md-12">
+        <h2>Make Predictions</h2>
+        <p class="lead">Single Input or Batch Upload</p>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Single Input Prediction</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('predict') }}">
+                    <div class="row">
+                        {% for feature in feature_names[:9] %}
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label">{{ feature }}</label>
+                            <input type="number" step="any" class="form-control" name="{{ feature }}" value="0" required>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="row">
+                        {% for feature in feature_names[9:] %}
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label">{{ feature }}</label>
+                            <input type="number" step="any" class="form-control" name="{{ feature }}" value="0" required>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <button type="submit" name="single_predict" class="btn btn-primary mt-3 w-100">Predict</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Batch Prediction (Upload Test.csv)</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('predict') }}" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="batch_file" class="form-label">Upload CSV File</label>
+                        <input type="file" class="form-control" id="batch_file" name="batch_file" accept=".csv" required>
+                        <div class="form-text">Upload a CSV file with the same features as the training data.</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Upload & Predict</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if single_result %}
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Classification Results</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Model</th>
+                            <th>Prediction</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for model, pred in single_result.classification.items() %}
+                        <tr>
+                            <td>{{ model }}</td>
+                            <td>
+                                {% if pred == 1 %}
+                                <span class="badge bg-success">Success</span>
+                                {% else %}
+                                <span class="badge bg-danger">Failure</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Regression Results</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Model</th>
+                            <th>Predicted Duration</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for model, pred in single_result.regression.items() %}
+                        <tr>
+                            <td>{{ model }}</td>
+                            <td>{{ "%.2f"|format(pred) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% if batch_results %}
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Batch Prediction Results ({{ batch_results.num_rows }} rows)</h5>
+            </div>
+            <div class="card-body">
+                <h6>Classification Predictions</h6>
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped">
+                        <thead>
+                            <tr>
+                                <th>Row</th>
+                                {% for result in batch_results.classification %}
+                                <th>{{ result.model }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in range(batch_results.num_rows|int) %}
+                            <tr>
+                                <td>{{ i + 1 }}</td>
+                                {% for result in batch_results.classification %}
+                                <td>
+                                    {% if result.predictions[i] == 1 %}
+                                    <span class="badge bg-success">Success</span>
+                                    {% else %}
+                                    <span class="badge bg-danger">Failure</span>
+                                    {% endif %}
+                                </td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <h6 class="mt-4">Regression Predictions</h6>
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped">
+                        <thead>
+                            <tr>
+                                <th>Row</th>
+                                {% for result in batch_results.regression %}
+                                <th>{{ result.model }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in range(batch_results.num_rows|int) %}
+                            <tr>
+                                <td>{{ i + 1 }}</td>
+                                {% for result in batch_results.regression %}
+                                <td>{{ "%.2f"|format(result.predictions[i]) }}</td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

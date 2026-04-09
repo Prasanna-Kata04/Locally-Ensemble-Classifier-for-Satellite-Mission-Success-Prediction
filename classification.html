@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Mission Classification - Satellite Telemetry Analysis{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-md-12">
+        <h2>Mission Classification Analysis</h2>
+        <p class="lead">Classifier Performance Metrics</p>
+    </div>
+</div>
+
+<div class="row mt-4">
+    {% for name in classifier_names %}
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">{{ name }}</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <p><strong>Accuracy (A):</strong> {{ "%.4f"|format(results[name].accuracy) }}</p>
+                        <p><strong>Precision (P):</strong> {{ "%.4f"|format(results[name].precision) }}</p>
+                    </div>
+                    <div class="col-6">
+                        <p><strong>Recall (R):</strong> {{ "%.4f"|format(results[name].recall) }}</p>
+                        <p><strong>F1-Score (F1):</strong> {{ "%.4f"|format(results[name].f1) }}</p>
+                    </div>
+                </div>
+                
+                {% if results[name].cm_plot %}
+                <div class="mt-3 text-center">
+                    <img src="{{ url_for('static', filename=results[name].cm_plot) }}" class="img-fluid" alt="Confusion Matrix">
+                </div>
+                {% endif %}
+                
+                <div class="mt-3">
+                    <h6>Classification Report (CR):</h6>
+                    <pre style="background-color: white; padding: 10px; border-radius: 5px; color: black;">{{ results[name].classification_report }}</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

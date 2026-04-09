@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}EDA - Satellite Telemetry Analysis{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-md-12">
+        <h2>Exploratory Data Analysis</h2>
+        <p class="lead">OPSSATAD Dataset Overview</p>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Total Records</h5>
+                <h2>{{ stats.total_records }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Training Records</h5>
+                <h2>{{ stats.train_records }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Test Records</h5>
+                <h2>{{ stats.test_records }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Features</h5>
+                <h2>{{ stats.features }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Mission Success</h5>
+                <h2 class="text-success">{{ stats.mission_success }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Mission Failure</h5>
+                <h2 class="text-danger">{{ stats.mission_failure }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Avg Duration</h5>
+                <h2>{{ stats.avg_duration }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Duration Statistics</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Min Duration:</strong> {{ stats.min_duration }}</p>
+                <p><strong>Max Duration:</strong> {{ stats.max_duration }}</p>
+                <p><strong>Average Duration:</strong> {{ stats.avg_duration }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Dataset Summary Statistics</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    {{ summary|safe }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

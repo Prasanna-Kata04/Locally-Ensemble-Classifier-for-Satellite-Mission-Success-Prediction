@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Satellite Telemetry Analysis{% endblock %}
+
+{% block content %}
+<div class="row mt-5">
+    <div class="col-md-12 text-center">
+        <h1 class="mb-4">Satellite Telemetry Mission Success Classification</h1>
+        <p class="lead">OPSSATAD Dataset Analysis Platform</p>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Mission Classification</h5>
+            </div>
+            <div class="card-body">
+                <p>Predict satellite mission success (0: Failure, 1: Success) using ensemble machine learning classifiers.</p>
+                <ul>
+                    <li>Random Forest Classifier</li>
+                    <li>Gradient Boosting Classifier</li>
+                    <li>Support Vector Machine (SVM)</li>
+                    <li>Locally Ensemble Classifier</li>
+                </ul>
+                <p><strong>Results:</strong> Accuracy, Precision, Recall, F1-Score, Confusion Matrix, Classification Report</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Duration Regression</h5>
+            </div>
+            <div class="card-body">
+                <p>Predict satellite mission duration using ensemble regression models.</p>
+                <ul>
+                    <li>Random Forest Regressor</li>
+                    <li>Gradient Boosting Regressor</li>
+                    <li>Linear Regression</li>
+                    <li>Locally Ensemble Regressor</li>
+                </ul>
+                <p><strong>Results:</strong> MAE, MSE, RMSE, R² Score, Scatter Plots</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-3">
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Exploratory Data Analysis</h5>
+            </div>
+            <div class="card-body">
+                <p>View dataset statistics, distributions, and key insights from the OPSSATAD telemetry data.</p>
+                {% if session.user_id %}
+                <a href="{{ url_for('eda') }}" class="btn btn-primary">View EDA</a>
+                {% else %}
+                <p class="text-muted">Please login to access</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Model Performance</h5>
+            </div>
+            <div class="card-body">
+                <p>Compare all classifiers and regressors side-by-side to identify the best performing models.</p>
+                {% if session.user_id %}
+                <a href="{{ url_for('comparison') }}" class="btn btn-primary">Compare Models</a>
+                {% else %}
+                <p class="text-muted">Please login to access</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Make Predictions</h5>
+            </div>
+            <div class="card-body">
+                <p>Predict mission outcomes using single input values or batch upload Test.csv file.</p>
+                <a href="{{ url_for('predict') }}" class="btn btn-primary">Predict Now</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if not session.user_id %}
+<div class="row mt-4">
+    <div class="col-md-12 text-center">
+        <div class="alert alert-info">
+            <strong>Note:</strong> Please <a href="{{ url_for('login') }}" class="alert-link">login</a> or 
+            <a href="{{ url_for('register') }}" class="alert-link">register</a> to access EDA, Classification, Regression, and Comparison pages.
+            <br>Prediction page is accessible without login.
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

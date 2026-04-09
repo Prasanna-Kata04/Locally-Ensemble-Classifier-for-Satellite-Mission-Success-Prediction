@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Duration Regression - Satellite Telemetry Analysis{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-md-12">
+        <h2>Duration Regression Analysis</h2>
+        <p class="lead">Regressor Performance Metrics</p>
+    </div>
+</div>
+
+<div class="row mt-4">
+    {% for name in regressor_names %}
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">{{ name }}</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <p><strong>MAE:</strong> {{ "%.4f"|format(results[name].mae) }}</p>
+                        <p><strong>MSE:</strong> {{ "%.4f"|format(results[name].mse) }}</p>
+                    </div>
+                    <div class="col-6">
+                        <p><strong>RMSE:</strong> {{ "%.4f"|format(results[name].rmse) }}</p>
+                        <p><strong>R² Score:</strong> {{ "%.4f"|format(results[name].r2) }}</p>
+                    </div>
+                </div>
+                
+                {% if results[name].scatter_plot %}
+                <div class="mt-3 text-center">
+                    <img src="{{ url_for('static', filename=results[name].scatter_plot) }}" class="img-fluid" alt="Scatter Plot">
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
